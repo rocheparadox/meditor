@@ -1,17 +1,23 @@
-#Sql commands to initialize the database
-
 create database meditor;
 
 \c meditor;
 
 create table PatientDetails(
   PATIENTID serial PRIMARY KEY,
-  NAME varchar (50) NOT NULL
+  FirstName varchar (50) NOT NULL,
+  LastName varchar (50) Not Null,
+  Gender varchar (25) check (Gender='Male' OR Gender= 'Female' OR Gender= 'F' OR Gender-= 'M') NOT Null,
+  Email varchar (150),
+  CountryOfBirth varchar (50) NOT NULL,
+  UNIQUE (Email)
 );
 
 create table DoctorDetails(
   DOCTORID serial PRIMARY KEY,
-  NAME varchar (50) NOT NULL
+  FirstName varchar (50) NOT NULL,
+  LastName varchar (50) NOT NULL,
+  Email varchar (150),
+  UNIQUE (Email)
 );
 
 create table TabletDetails(
