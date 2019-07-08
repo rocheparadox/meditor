@@ -1,3 +1,5 @@
+#Sql commands to initialize the database
+
 create database meditor;
 
 \c meditor;
