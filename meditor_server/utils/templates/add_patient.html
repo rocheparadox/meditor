@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+      
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    {%load static%}
+    <script src='{%static "js/main.js"%}'></script>
+    <script>
+
+        function populateOptions(){
+            var portalsJsonObject={
+                "add_patient":{
+                    "display_name":"Add Patient",
+                    "display_picture":"",
+                    "redirect_link":"/utils/add_patient"
+                },
+                "change_patient":{
+                    "display_name":"Change Patient Details",
+                    "display_picture":"",
+                    "redirect_link":"/utils/change_patient"
+                },
+                "add_pill":{
+                    "display_name":"Add New Pill Details",
+                    "display_picture":"",
+                    "redirect_link":"/utils/add_pill"
+                },
+                "change_pill":{
+                    "display_name":"Change Pill Details",
+                    "display_picture":"",
+                    "redirect_link":"/utils/change_pill"
+                }
+            }
+
+            var keys = getJsonKeys(portalsJsonObject);
+            //console.log(keys)
+
+            var portalsSpan = document.getElementById("portalsDiv");
+            var portalsSpanHtml = "";
+            for (i in keys){
+                var key = keys[i];
+                var portalJsonObj = portalsJsonObject[key];
+                var displayName = portalJsonObj["display_name"];
+                var redirect_link = portalJsonObj["redirect_link"];
+
+                var temp = "<a href='";
+                temp = temp + redirect_link + "'>" + displayName + "</a><br><br>" ;
+                //console.log(temp);
+
+                portalsSpanHtml = portalsSpanHtml + temp;
+            }
+            //console.log(portalsSpanHtml);
+            portalsSpan.innerHTML = portalsSpanHtml;
+        }
+
+        function submit_data(){
+            console.log("Let us submit the data");
+            var first_name = document.getElementById('first_name').value;
+            var last_name = document.getElementById('last_name').value;
+            var age = document.getElementById('age').value;
+            var gender = document.getElementById('gender').value;
+            var email = document.getElementById('email').value; 
+            
+            //Make required validations
+            //console.log(first_name, last_name, age, gender, email);
+            
+            var ajaxUrl = "/utils/api/add_patient";
+            var ajaxType = "POST";
+            var data = {first_name:first_name, last_name:last_name, age:age, gender:gender, email:email};
+            //encapsulate all data into a key "input_data"
+            data = {input_data:data};
+            //console.log(data);
+            makeAjaxCall(ajaxUrl, ajaxType, data);
+        }
+        
+        function prepopulate(){
+            document.getElementById('first_name').value = "Roche";
+            document.getElementById('last_name').value = "Christopher";
+            document.getElementById('age').value = 24;
+            document.getElementById('gender').value = "Male";
+            document.getElementById('email').value = "roche.c@gmail.com";
+        }
+        
+        $(document).ready( function(){
+            console.log("document ready function");
+            
+            $('.dropdown-item').on('click', function(){
+                //console.log("gender li clicked");
+                //console.log($(this).attr('value'));
+                var selected_gender = $(this).attr('value');
+                document.getElementById('gender').value = selected_gender;
+                
+            });
+            //prepopulate();
+            
+        }
+        );
+        
+        
+    </script>
+      <title class="util_page_title">Meditor</title>
+    </head>
+    <body onload="populateOptions()">
+        <h1>Add patient</h1>
+        <div id=container>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">First Name</span>
+              </div>
+              <input id="first_name" type="text" class="form-control" placeholder="First Name" aria-label="name" aria-describedby="basic-addon1">
+            </div>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" >Last Name</span>
+              </div>
+              <input id="last_name" type="text" class="form-control" placeholder="Last Name" aria-label="name" aria-describedby="basic-addon1">
+            </div>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gender</button>
+                <div class="dropdown-menu">
+                  <a id ="hoo" class="dropdown-item" value="Male" href="#">Male</a>
+                  <a class="dropdown-item" value="Female" href="#">Female</a>
+                  <a class="dropdown-item" value="Other" href="#">Other</a>
+                </div>
+              </div>
+              <input id="gender" type="text" class="form-control">
+            </div>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" >Age</span>
+              </div>
+              <input id="age" type="text" class="form-control" placeholder="Age" aria-label="age" aria-describedby="basic-addon1">
+            </div>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" >Email</span>
+              </div>
+              <input id="email" type="text" class="form-control" placeholder="e-mail" aria-label="email" aria-describedby="basic-addon1">
+            </div>
+            
+            <a class="btn btn-primary" onclick="submit_data()" role="button">Submit</a>
+        </div>
+</body>
+</html>

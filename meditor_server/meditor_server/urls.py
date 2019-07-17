@@ -24,5 +24,7 @@ urlpatterns = [
 
     #meditor - dev defined urls
     path('listview', include('listview.urls')),
+    path('portals', include('portals.urls')),
+    path('utils', include('utils.urls')),
     path('', views.index)
 ]

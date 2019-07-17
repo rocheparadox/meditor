@@ -5,28 +5,28 @@
 <script>
 
     function populateOptions(){
-        var portalsJsonObject={
-            "add_patient":{
-                "display_name":"Add Patient",
-                "display_picture":"",
-                "redirect_link":"add_patient"
-            },
-            "change_patient":{
-                "display_name":"Change Patient Details",
-                "display_picture":"",
-                "redirect_link":"change_patient"
-            },
-            "add_pill":{
-                "display_name":"Add New Pill Details",
-                "display_picture":"",
-                "redirect_link":"add_pill"
-            },
-            "change_pill":{
-                "display_name":"Change Pill Details",
-                "display_picture":"",
-                "redirect_link":"change_pill"
+            var portalsJsonObject={
+                "add_patient":{
+                    "display_name":"Add Patient",
+                    "display_picture":"",
+                    "redirect_link":"/utils/add_patient"
+                },
+                "change_patient":{
+                    "display_name":"Change Patient Details",
+                    "display_picture":"",
+                    "redirect_link":"/utils/change_patient"
+                },
+                "add_pill":{
+                    "display_name":"Add New Pill Details",
+                    "display_picture":"",
+                    "redirect_link":"/utils/add_pill"
+                },
+                "change_pill":{
+                    "display_name":"Change Pill Details",
+                    "display_picture":"",
+                    "redirect_link":"/utils/change_pill"
+                }
             }
-        }
 
         var keys = getJsonKeys(portalsJsonObject);
         //console.log(keys)

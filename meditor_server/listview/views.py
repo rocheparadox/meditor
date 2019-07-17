@@ -10,3 +10,8 @@ def listview_index(request):
 
     return HttpResponse(index_template.render())
 
+def patient_listview(request):
+
+    index_template = get_template('patient_listview.html')
+    return HttpResponse(index_template.render())
+
