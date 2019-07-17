@@ -6,9 +6,9 @@ create table PatientDetails(
   PATIENTID serial PRIMARY KEY,
   FirstName varchar (50) NOT NULL,
   LastName varchar (50) Not Null,
-  Gender varchar (25) check (Gender='Male' OR Gender= 'Female' OR Gender= 'F' OR Gender-= 'M') NOT Null,
+  Gender varchar (25) check (Gender='Male' OR Gender= 'Female' OR Gender= 'Other' OR Gender= 'F' OR Gender = 'M') NOT Null,
   Email varchar (150),
-  CountryOfBirth varchar (50) NOT NULL,
+  Age integer NOT NULL,
   UNIQUE (Email)
 );
 
