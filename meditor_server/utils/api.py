@@ -41,4 +41,5 @@ def add_patient(request):
 
     except Exception as exception:
         print(exception)
+        db.roll_back()
     return HttpResponse(response)

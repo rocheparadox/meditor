@@ -24,6 +24,10 @@ class DB_UTILS:
         self.conn.commit()
         cur.close()
 
+    #roll back the query
+    def roll_back(self):
+        self.conn.rollback()
+
     def get_data_from_database(self, query):
         pass
 
