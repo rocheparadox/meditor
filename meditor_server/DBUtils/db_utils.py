@@ -72,19 +72,19 @@ class DB_UTILS:
         query= "insert into doctordetails(firstname, lastname, email) value('"+first_name+"','"+last_name+"','"+email+"')"
         self.execute_query(query)
 
-    def change_doctor_details(self, first_name, last_name, email):
+    def change_doctor_details(self, first_name, last_name, email, doctor_id):
         query = "update dotordetails set " \
                 "firstname='"+first_name+"', " \
                 "lastname='"+last_name+"', " \
                 "email='"+email+"' " \
-                "where doctorid=" + patient_id
+                "where doctorid=" + doctor_id
         self.execute_query(query)
 
     def add_doctor_to_patient_details(self, patient_id, doctor_id):
         query= "insert into doctortopatientdetails(patientid, doctorid) value('"+patient_id+"','"+doctor_id+"')"
         self.execute_query(query)
 
-    def change_doctor_to_patient_details(self, patient_id, doctor_id):
+    def change_doctor_to_patient_details(self, patient_id, doctor_id, doctor_to_patient_details_id):
         query = "update doctortopatientdetails set " \
                 "patientid='"+patient_id+"', " \
                 "doctorid='"+doctor_id+"',"\
@@ -95,7 +95,7 @@ class DB_UTILS:
         query= "insert into patientscheduleandslotdetails(patientid, scheduletoslotdetailsid) value('"+patient_id+"','"+schedule_to_slot_detailsid+"')"
         self.execute_query(query)
 
-    def change_patient_schedule_and_slot_details(self, patient_id, schedule_to_slot_details_id):
+    def change_patient_schedule_and_slot_details(self, patient_id, schedule_to_slot_details_id, patient_toss_id):
         query = "update patientscheduleandslotdetails set " \
                 "patientid='"+patient_id+"', " \
                 "scheduletoslotdetailsid='"+schedule_to_slot_details_id+"', " \
@@ -106,7 +106,7 @@ class DB_UTILS:
         query= "insert into patienttobeddetails(patientid, bedid) value('"+patient_id+"','"+bed_id+"')"
         self.execute_query(query)
 
-    def change_patient_to_bed_details(self, patient_id, bed_id ):
+    def change_patient_to_bed_details(self, patient_id, bed_id, patient_to_bed_details_id ):
         query= "update patienttobeddetails set" \
                "patientid='"+patient_id+"', " \
                "bedid='"+bed_id+"', " \
@@ -117,7 +117,7 @@ class DB_UTILS:
         query= "insert into scheduledetails(day, clock) value('"+day+"','"+clock+"')"
         self.execute_query(query)
 
-    def change_schedule_details(self,day, clock):
+    def change_schedule_details(self,day, clock, schedule_id):
         query= "update scheduledetails set" \
                "day= '"+day+"', " \
                "clock= '"+clock+"', " \
@@ -128,7 +128,7 @@ class DB_UTILS:
         query= "insert into scheduletoslotdetails(scheduleid, slotid) value('"+schedule_id+"','"+slot_id+"')"
         self.execute_query(query)
 
-    def change_schedule_to_slot_details(self, schedule_id, slot_id):
+    def change_schedule_to_slot_details(self, schedule_id, slot_id, schedule_to_slot_details_id):
         query= "update scheduletoslotdetails set" \
                "scheduleid= '" +schedule_id+"', " \
                "slotid= '"+slot_id+"', " \
@@ -139,13 +139,13 @@ class DB_UTILS:
         query= "insert into slotdetails(slotnumber) value('"+slot_number+"')"
         self.execute_query(query)
 
-    def change_slot_details(self, slot_number):
+    def change_slot_details(self, slot_number, slot_id):
         query= "update slotdetails set" \
                "slotnumber= '"+slot_number+"', " \
                "where slotid=" + slot_id
         self.execute_query(query)
 
-    def change_bed_details(self, bed_number):
+    def change_bed_details(self, bed_number, bed_id):
         query = "update beddetails set " \
                 "bednumber='"+bed_number+"', " \
                 "where bedid=" + bed_id
