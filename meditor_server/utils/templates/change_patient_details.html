@@ -12,12 +12,15 @@
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-      
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     {%load static%}
     <script src='{%static "js/main.js"%}'></script>
     <script>
+
+    var patient_details;
+    var patient_details_json;
 
         function populateOptions(){
             var portalsJsonObject={
@@ -70,21 +73,22 @@
             var last_name = document.getElementById('last_name').value;
             var age = document.getElementById('age').value;
             var gender = document.getElementById('gender').value;
-            var email = document.getElementById('email').value; 
-            
+            var email = document.getElementById('email').value;
+
             //Make required validations
             //console.log(first_name, last_name, age, gender, email);
-            
-            var ajaxUrl = "/utils/api/add_patient";
+
+            var ajaxUrl = "/utils/api/edit_patient";
             var ajaxType = "POST";
-            var data = {first_name:first_name, last_name:last_name, age:age, gender:gender, email:email};
+            var data = {first_name:first_name, last_name:last_name, age:age, gender:gender, email:email, patient_id:patient_details_json['patient_id']};
             //encapsulate all data into a key "input_data"
             data = {input_data:data};
             //console.log(data);
-            response = makeAjaxCall(ajaxUrl, ajaxType, data);
-            alert(response)
+            var response = makeAjaxCall(ajaxUrl, ajaxType, data, false);
+            alert(response);
         }
-        
+
+
         function prepopulate(){
             document.getElementById('first_name').value = "Roche";
             document.getElementById('last_name').value = "Christopher";
@@ -92,28 +96,63 @@
             document.getElementById('gender').value = "Male";
             document.getElementById('email').value = "roche.c@gmail.com";
         }
-        
+
+        function populateData(){
+            var url_string = document.URL;
+            url = new URL(url_string);
+            var patient_id = url.searchParams.get("patient_id");
+            console.log("Going to populate data for patient " + patient_id);
+
+            var ajaxUrl = "/utils/api/get_patient_details";
+            var ajaxType = "POST";
+            var data = {"patient_id":patient_id};
+            data = {input_data:data};
+            patient_details = makeAjaxCall(ajaxUrl, ajaxType, data, false)
+            patient_details_json = JSON.parse(patient_details)
+
+            document.getElementById('first_name').value = patient_details_json["first_name"];
+            document.getElementById('last_name').value = patient_details_json["last_name"];
+            document.getElementById('age').value = patient_details_json["age"];
+            document.getElementById('gender').value = patient_details_json["gender"];
+            document.getElementById('email').value = patient_details_json["email"];
+        }
+
+        function get_all_patients_details(){
+
+            var ajaxUrl = "/utils/api/get_all_patients_details";
+            var ajaxType = "GET";
+            var data = ""//{first_name:first_name, last_name:last_name, age:age, gender:gender, email:email};
+            //encapsulate all data into a key "input_data"
+            data = {input_data:data};
+            //console.log(data);
+            response = makeAjaxCall(ajaxUrl, ajaxType, data, false)
+            //console.log(response);
+            return response;
+        }
+
+
         $(document).ready( function(){
             console.log("document ready function");
-            
+
             $('.dropdown-item').on('click', function(){
                 //console.log("gender li clicked");
                 //console.log($(this).attr('value'));
                 var selected_gender = $(this).attr('value');
                 document.getElementById('gender').value = selected_gender;
-                
+
             });
             //prepopulate();
-            
+            populateData();
+
         }
         );
-        
-        
+
+
     </script>
       <title class="util_page_title">Meditor</title>
     </head>
     <body onload="populateOptions()">
-        <h1>Add patient</h1>
+        <h1>Change patient</h1>
         <div id=container>
             <div class="input-group mb-3">
               <div class="input-group-prepend">
@@ -148,13 +187,14 @@
               <input id="age" type="text" class="form-control" placeholder="Age" aria-label="age" aria-describedby="basic-addon1">
             </div>
 
+
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text" >Email</span>
               </div>
               <input id="email" type="text" class="form-control" placeholder="e-mail" aria-label="email" aria-describedby="basic-addon1">
             </div>
-            
+
             <a class="btn btn-primary" onclick="submit_data()" role="button">Submit</a>
         </div>
 </body>
