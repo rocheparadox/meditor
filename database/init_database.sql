@@ -32,13 +32,16 @@ create table BedDetails(
 
 create table SlotDetails(
   SLOTID serial PRIMARY KEY,
-  SLOTNUMBER integer NOT NULL
+  SLOTNUMBER integer NOT NULL,
+  SLOTSTATUS varchar NOT NULL
 );
 
 create table ScheduleDetails(
   SCHEDULEID serial PRIMARY KEY,
   DAY varchar (10) NOT NULL,
   CLOCK time NOT NULL,
+  SCHEDULEDATE date NOT NULL,
+
   UNIQUE(DAY, CLOCK)
 );
 

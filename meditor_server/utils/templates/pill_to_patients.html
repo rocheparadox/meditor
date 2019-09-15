@@ -104,7 +104,7 @@
              && url_patient_id!='' && url_patient_id.length!=0){
             isExists = 1
             }
-            console.log(isExists);
+            //console.log(isExists);
 
             // Dropdown details for Patients from DB
             patients_data = get_all_patients_details();
@@ -130,6 +130,7 @@
             $("#pill_ids").html(pills);
 
             // Dropdown details for Available Slots from DB
+                    
             slot_data = get_all_slot_details();
             slot_data = JSON.parse(slot_data)["response"];
             var slots = '<option value="-1">Please Select Slot</option>';
@@ -137,6 +138,8 @@
                 slots += '<option value="' + slot_data[i].slotid + '">Slot ' + slot_data[i].slotnumber + '</option>';
             }
             $("#slotid").html(slots);
+            
+            
         });
     </script>
     <title class="util_page_title">Meditor</title>
@@ -157,16 +160,6 @@
             </div>
         </div>
         <div class="row">
-                <div class="input-group-prepend col-sm-2">Available Slots
-                </div>
-                <div class='col-sm-5'>
-                    <div class="form-group">
-                        <select class="custom-select" id="slotid" required>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        <div class="row">
             <div class="input-group-prepend col-sm-2">Slot Time
             </div>
             <div class='col-sm-3'>
@@ -180,6 +173,16 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+                <div class="input-group-prepend col-sm-2">Available Slots
+                </div>
+                <div class='col-sm-5'>
+                    <div class="form-group">
+                        <select class="custom-select" id="slotid" required>
+                        </select>
+                    </div>
+                </div>
+            </div>
         <div class="row">
             <div class="input-group-prepend col-sm-2">Select Tablets
             </div>

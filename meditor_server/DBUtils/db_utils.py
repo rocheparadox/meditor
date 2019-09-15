@@ -86,7 +86,7 @@ class DB_UTILS:
 
         return pill_details
     
-    def get_all_slot_details(self, slotid=-1):
+    def get_available_slot_details(self, slotid=-1):
         if slotid == -1:
             query = "select * from slotdetails where slotstatus='open' ORDER BY slotid ASC;"
             slot_details = self.get_data_from_database(query)
@@ -165,18 +165,18 @@ class DB_UTILS:
                "where patienttobeddetailsid=" + patient_to_bed_details_id
         self.execute_query(query)
 
-    def add_schedule_details(self, day, clock,scheduledt):
-        query= "insert into scheduledetails(day, clock, scheduledt)" \
-        "values('"+day+"','"+clock+"','"+scheduledt+"') RETURNING scheduleid"
+    def add_schedule_details(self, day, clock,scheduledate):
+        query= "insert into scheduledetails(day, clock, scheduledate)" \
+        "values('"+day+"','"+clock+"','"+scheduledate+"') RETURNING scheduleid"
         id=self.execute_query_return_row_id(query)
 
         return id
 
-    def change_schedule_details(self,day, clock, schedule_id,scheduledt):
+    def change_schedule_details(self,day, clock, schedule_id,scheduledate):
         query= "update scheduledetails set" \
                "day= '"+day+"', " \
                "clock= '"+clock+"', " \
-               "scheduledt= '"+scheduledt+"', " \
+               "scheduledate= '"+scheduledate+"', " \
                "where scheduleid=" + schedule_id
         self.execute_query(query)
 

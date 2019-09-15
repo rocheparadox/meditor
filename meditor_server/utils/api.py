@@ -153,9 +153,9 @@ def get_all_pills_details(request):
     return HttpResponse(pill_details_json)
 
 @csrf_exempt
-def get_all_slot_details(request):
+def get_available_slot_details(request):
     #response = "slots data"
-    slot_details = db.get_all_slot_details(-1)
+    slot_details = db.get_available_slot_details(-1)
     keys = ["slotid", "slotnumber","slotstatus"]
     slot_details_json = convert_db_data_to_json_array(keys, slot_details)
     return HttpResponse(slot_details_json)

@@ -20,7 +20,7 @@ urlpatterns = [
     path('/api/edit_patient', api.edit_patient_details),
     path('/api/add_pill', api.add_pill),
     path('/api/get_all_pills_details', api.get_all_pills_details),
-    path('/api/get_all_slot_details', api.get_all_slot_details),
+    path('/api/get_all_slot_details', api.get_available_slot_details),
     path('/api/add_pill_to_patient', api.add_pill_to_patient), 
     path('/api/get_pill_details', api.get_pill_details),
     path('/api/update_slot_details', api.update_slot_details),
