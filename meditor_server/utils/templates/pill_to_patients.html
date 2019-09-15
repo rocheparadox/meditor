@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" media="screen"
+        href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link
+        href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css"
+        rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+
+
+    <script
+        src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+    {%load static%}
+    <script src='{%static "js/main.js"%}'></script>
+    <script src='{%static "js/meditor_menu.js"%}'></script>
+    <link rel="stylesheet" type="text/css" href='{%static "css/meditor.css"%}' />
+
+    <script>
+        function update_pill() {
+
+        }
+        var patients_data;
+
+        function get_all_patients_details() {
+
+            var ajaxUrl = "/utils/api/get_all_patients_details";
+            var ajaxType = "GET";
+            var data = "";
+            data = { input_data: data };
+            response = makeAjaxCall(ajaxUrl, ajaxType, data, false)
+            return response;
+        }
+
+        function get_all_pills_details() {
+
+            var ajaxUrl = "/utils/api/get_all_pills_details";
+            var ajaxType = "GET";
+            var data = "";
+            data = { input_data: data };
+            response = makeAjaxCall(ajaxUrl, ajaxType, data, false)
+            return response;
+        }
+        function get_all_slot_details() {
+
+            var ajaxUrl = "/utils/api/get_all_slot_details";
+            var ajaxType = "GET";
+            var data = "";
+            data = { input_data: data };
+            response = makeAjaxCall(ajaxUrl, ajaxType, data, false)
+            return response;
+        } 
+
+        function add_pill_to_patient(){
+            console.log("Let us submit the pill to patient data");
+            var pill_id = document.getElementById('pill_id').value;
+            var patient_id = document.getElementById('patient_id').value;
+            var slotid = document.getElementById('slotid').value;
+            var scheduledttime = document.getElementById('scheduledttime').value;
+            var scheduledt = scheduledttime.substring(0, 10);
+            var clock = scheduledttime.substring(11, scheduledttime.length);
+            
+            var ajaxUrl = "/utils/api/add_pill_to_patient";
+            var ajaxType = "POST";
+            var data = { pill_id: pill_id, patient_id:patient_id, slotid:slotid, 
+                scheduledt:scheduledt, clock:clock };
+            //encapsulate all data into a key "input_data"
+            data = { input_data: data };
+            var response = makeAjaxCall(ajaxUrl, ajaxType, data, false);
+            alert(response);
+        }
+
+        $(document).ready(function () {
+            $('#pill_ids').on('change', function () {
+                var selected = $(this).find("option:selected");
+                var arrSelected = [];
+                selected.each(function () {
+                    arrSelected.push($(this).val());
+                });
+                $("#pill_id").val(arrSelected.toString());
+            });
+
+            var url_string = document.URL;
+            url = new URL(url_string);
+            var url_patient_id = url.searchParams.get("patient_id");
+            console.log(url_patient_id);
+            var isExists = 0;
+
+            if(url_patient_id!=undefined && url_patient_id!=null && url_patient_id!='null'
+             && url_patient_id!='' && url_patient_id.length!=0){
+            isExists = 1
+            }
+            console.log(isExists);
+
+            // Dropdown details for Patients from DB
+            patients_data = get_all_patients_details();
+            patients_data = JSON.parse(patients_data)["response"];
+            var s = '<option value="-1">Please Select Patient</option>';
+            for (var i = 0; i < patients_data.length; i++) {
+                if(isExists==1 && patients_data[i].patient_id==url_patient_id){
+                    s += '<option value="' + patients_data[i].patient_id + '" selected>' + patients_data[i].first_name + " " + patients_data[i].last_name + '</option>';
+                }else{
+                    s += '<option value="' + patients_data[i].patient_id + '">' + patients_data[i].first_name + " " + patients_data[i].last_name + '</option>';
+                }
+                
+            }
+            $("#patient_id").html(s);
+
+            // Dropdown details for Tablets from DB
+            pills_data = get_all_pills_details();
+            pills_data = JSON.parse(pills_data)["response"];
+            var pills = '<option value="-1">Please Select Pills</option>';
+            for (var i = 0; i < pills_data.length; i++) {
+                pills += '<option value="' + pills_data[i].pill_id + '">' + pills_data[i].pill_name + '</option>';
+            }
+            $("#pill_ids").html(pills);
+
+            // Dropdown details for Available Slots from DB
+            slot_data = get_all_slot_details();
+            slot_data = JSON.parse(slot_data)["response"];
+            var slots = '<option value="-1">Please Select Slot</option>';
+            for (var i = 0; i < slot_data.length; i++) {
+                slots += '<option value="' + slot_data[i].slotid + '">Slot ' + slot_data[i].slotnumber + '</option>';
+            }
+            $("#slotid").html(slots);
+        });
+    </script>
+    <title class="util_page_title">Meditor</title>
+</head>
+
+<body onload="populateOptions()">
+    <div id="portalsDiv"></div>
+    <h1>Pill To Patients</h1>
+    <div class="container">
+        <div class="row">
+            <div class="input-group-prepend col-sm-2">Select Patient
+            </div>
+            <div class='col-sm-5'>
+                <div class="form-group">
+                    <select class="custom-select" id="patient_id" required>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+                <div class="input-group-prepend col-sm-2">Available Slots
+                </div>
+                <div class='col-sm-5'>
+                    <div class="form-group">
+                        <select class="custom-select" id="slotid" required>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        <div class="row">
+            <div class="input-group-prepend col-sm-2">Slot Time
+            </div>
+            <div class='col-sm-3'>
+                <div class="form-group">
+                    <div class='input-group date' id='scheduledttimepicker'>
+                        <input type='text' class="form-control" name="scheduledttime" id="scheduledttime" required/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-group-prepend col-sm-2">Select Tablets
+            </div>
+            <div class='col-sm-5'>
+                <div class="form-group">
+
+                    <select class="custom-select" multiple id="pill_ids" required>
+                    </select>
+                    <input type="hidden" id="pill_id" value="" />
+                </div>
+            </div>
+        </div>
+        <br>
+        <a class="btn btn-primary" onclick="add_pill_to_patient()" role="button">Save</a>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $('#scheduledttimepicker').datetimepicker();
+        });
+    </script>
+</body>
+
+</html>

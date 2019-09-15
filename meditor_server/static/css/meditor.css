@@ -1,0 +1,8 @@
+div#portalsDiv{
+    display:block;
+    margin: 1% 0;
+}
+div#portalsDiv > a {
+    margin-left:2%;
+    padding-right:5%;
+}

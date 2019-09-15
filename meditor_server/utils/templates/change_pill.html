@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    {%load static%}
+    <script src='{%static "js/main.js"%}'></script>    
+    <script src='{%static "js/meditor_menu.js"%}'></script>
+    <link rel="stylesheet" type="text/css" href='{%static "css/meditor.css"%}' />
+    <script>
+        function update_pill() {
+            console.log("Let us submit the pill data");
+            var pill_name = document.getElementById('pill_name').value;
+
+            //Make required validations
+            //console.log(first_name, last_name, age, gender, email);
+
+            var ajaxUrl = "/utils/api/change_pill";
+            var ajaxType = "POST";
+            var data = { pill_name: pill_name, pill_id: pill_details_json['pill_id'] };
+            //encapsulate all data into a key "input_data"
+            data = { input_data: data };
+            var response = makeAjaxCall(ajaxUrl, ajaxType, data, false);
+            alert(response);
+        }
+
+        function populateData() {
+            var url_string = document.URL;
+            url = new URL(url_string);
+            var pill_id = url.searchParams.get("pill_id");
+            console.log("Going to populate data for pill " + pill_id);
+
+            var ajaxUrl = "/utils/api/get_pill_details";
+            var ajaxType = "POST";
+            var data = { "pill_id": pill_id };
+            data = { input_data: data };
+            pill_details = makeAjaxCall(ajaxUrl, ajaxType, data, false)
+            pill_details_json = JSON.parse(pill_details)
+
+            document.getElementById('pill_name').value = pill_details_json["pill_name"];
+        }
+
+        $(document).ready(function () {
+            populateData();
+        });
+
+    </script>
+    <title class="util_page_title">Meditor</title>
+</head>
+
+<body onload="populateOptions()">
+    <div id="portalsDiv"></div>
+    <h1>Change pill</h1>
+    <div id=container>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Pill Name</span>
+            </div>
+            <input id="pill_name" type="text" class="form-control" placeholder="Pill Name" aria-label="pill_name"
+                aria-describedby="basic-addon1">
+        </div>
+
+        <a class="btn btn-primary" onclick="update_pill()" role="button">Save</a>
+    </div>
+</body>
+
+</html>

@@ -1,80 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Meditor</title>
 
-        <!-- Required meta tags -->
+    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
     {%load static%}
     <script src='{%static "js/main.js"%}'></script>
+    <script src='{%static "js/meditor_menu.js"%}'></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script src='{%static "js/dataTables.editor.min.js"%}'></script>
+    <link rel="stylesheet" type="text/css" href='{%static "css/meditor.css"%}' />
     <script>
-    var patients_data;
 
-         function get_all_patients_details(){
+
+        var patients_data;
+
+        function get_all_patients_details() {
 
             var ajaxUrl = "/utils/api/get_all_patients_details";
             var ajaxType = "GET";
-            var data = ""//{first_name:first_name, last_name:last_name, age:age, gender:gender, email:email};
+            var data = "";//{first_name:first_name, last_name:last_name, age:age, gender:gender, email:email};
             //encapsulate all data into a key "input_data"
-            data = {input_data:data};
+            data = { input_data: data };
             //console.log(data);
             response = makeAjaxCall(ajaxUrl, ajaxType, data, false)
             //console.log(response);
             return response;
         }
 
-        $(document).ready( function () {
+        $(document).ready(function () {
 
             patients_data = get_all_patients_details();
             patients_data = JSON.parse(patients_data)["response"]
+            //patients_data = [{first_name:"Saran",last_name:"Sakthi",gender:"Female",email:"test",age:27}]
             console.log(patients_data)
             $('#patient_table').DataTable({
 
-                data:patients_data,
-                columns:[
-                    {data:"first_name", },
-                    {data:"last_name"},
-                    {data:"gender"},
-                    {data:"email"},
-                    {data:"age"},
-                ]
+                data: patients_data,
+                columns: [
+                    { data: "first_name", },
+                    { data: "last_name" },
+                    { data: "gender" },
+                    { data: "email" },
+                    { data: "age" },
+                    {// this is Actions Column 
+                        mRender: function (data, type, row) {
+                            return '<a href=/utils/change_patient?patient_id=' + row.patient_id + '>Edit</a> | <a href=/utils/pill_to_patients?patient_id=' + row.patient_id + '>Add Slot</a>';
+                        }
+                    }]
             });
-        } );
+        });
     </script>
 
 </head>
 
-<h1>Patient Details</h1>
-
-<body>
-<table id="patient_table" class="display">
-    <thead>
-        <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Gender</th>
-            <th>E-mail</th>
-            <th>age</th>
-        </tr>
-    </thead>
-</table>
-
-
+<body onload="populateOptions()">
+    <div id="portalsDiv"></div>
+    <h1>Patient Details</h1>
+    <table id="patient_table" class="display">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Gender</th>
+                <th>E-mail</th>
+                <th>age</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+    </table>
 </body>
+
 </html>
